@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="page-body">
+    <div class="container-xl d-flex flex-column justify-content-center">
+        <h2>Dashboard</h2>
+       
+        <div class="row">
+                <div class="col">
+                    <a href="{{ path('app_dash_create') }}" class="btn btn-primary">
+                    Create
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="table-responsive">
+                      <table class="table table-vcenter card-table">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th class="w-1"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for company in companies %}    
+                                <tr>
+                                    <td>{{ company.name }}</td>
+                                    <td class="text-secondary">
+                                        {{ company.description }}
+                                    </td>
+                                    
+                                    <td>
+                                        <a href="{{path('app_dash_update', {id:company.id})}}">Edit</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
