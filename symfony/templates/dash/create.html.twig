@@ -6,7 +6,17 @@
     <div class="container-xl d-flex flex-column justify-content-center">
         <h2>Create company</h2>
        
-        {{ form(form) }}
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.name) }}
+            </div>
+            
+            <div class="col">
+                {{form_row(form.submit)}}
+            </div>
+        </div>
+        {{ form_end(form) }}
 
        
         
