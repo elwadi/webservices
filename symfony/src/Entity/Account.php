@@ -8,8 +8,12 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\AccountRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ApiResource(
@@ -18,7 +22,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             normalizationContext:['groups' => 'extraread']
         ),
         new GetCollection(uriTemplate: '/list_accounts',
-            normalizationContext:['groups' => 'read']
+            normalizationContext:['groups' => 'read'],
         ),
     ],
     
@@ -39,6 +43,7 @@ class Account
 
     #[ORM\Column(length: 255)]
     #[Groups(['read','extraread', 'write'])]
+    #[Assert\NotBlank]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
@@ -48,6 +53,17 @@ class Account
     #[ORM\ManyToOne(inversedBy: 'accounts')]
     #[Groups('extraread')]
     private ?Company $company = null;
+
+    /**
+     * @var Collection<int, LogMessage>
+     */
+    #[ORM\OneToMany(targetEntity: LogMessage::class, mappedBy: 'account')]
+    private Collection $logMessages;
+
+    public function __construct()
+    {
+        $this->logMessages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +102,36 @@ class Account
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LogMessage>
+     */
+    public function getLogMessages(): Collection
+    {
+        return $this->logMessages;
+    }
+
+    public function addLogMessage(LogMessage $logMessage): static
+    {
+        if (!$this->logMessages->contains($logMessage)) {
+            $this->logMessages->add($logMessage);
+            $logMessage->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLogMessage(LogMessage $logMessage): static
+    {
+        if ($this->logMessages->removeElement($logMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($logMessage->getAccount() === $this) {
+                $logMessage->setAccount(null);
+            }
+        }
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Account;
+use App\Entity\LogMessage;
 use App\Form\AccountType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,6 +31,12 @@ class AccountController extends AbstractController
             if($form->isSubmitted() && $form->isValid()){
                 $account=$form->getData();
                 $manager->getManager()->persist($account);// 1
+
+                $logMessage=new LogMessage();
+                $logMessage->setAccount($account);
+                $logMessage->setMessage('Account created');
+                
+                $manager->getManager()->persist($logMessage);// 2
                 $manager->getManager()->flush();
             }
 
