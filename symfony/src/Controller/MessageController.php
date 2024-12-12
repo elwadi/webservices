@@ -14,7 +14,7 @@ class MessageController extends AbstractController
     public function index(MessageBusInterface $bus): Response
     {
         for ($i = 10; $i < 1000; ++$i) {
-            $bus->dispatch(new SendMail('Hello World! # '.$i));
+            $bus->dispatch(new SendMail('Company test ', 'Company  # '.$i));
         }
 
         return $this->render('message/index.html.twig', [

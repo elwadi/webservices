@@ -42,6 +42,15 @@ RUN docker-php-ext-install \
 # Extract PHP source
 RUN docker-php-source extract
 
+# Create directory for amqp extension
+RUN mkdir /usr/src/php/ext/amqp
+
+# Download AMQP master branch files to extension directory
+RUN curl -L https://github.com/php-amqp/php-amqp/archive/master.tar.gz | tar -xzC /usr/src/php/ext/amqp --strip-components=1
+
+# Install amqp extension using built-in docker binary
+RUN docker-php-ext-install amqp
+
 RUN docker-php-source delete
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone \
