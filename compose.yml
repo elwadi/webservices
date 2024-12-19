@@ -33,5 +33,14 @@ services:
             - ./database_data:/var/lib/postgresql/data:rw
         networks:
             - symfony
+    dbmysql:
+        image: mysql:9.1.0-oracle
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: dockertuto
+        networks:
+            - symfony
 networks:
     symfony:

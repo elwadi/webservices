@@ -4,18 +4,12 @@ namespace App\Message;
 
 final class SendMail
 {
-    public function __construct(
-        private string $content,private string $name
-    ) {
+    public function __construct(private int $userId) {
     }
 
-    public function getContent(): string
-    {
-        return $this->content;
-    }
 
-    public function getName(): string
+    public function getUserId(): int
     {
-        return $this->name;
+        return $this->userId;
     }
 }

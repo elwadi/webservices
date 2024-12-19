@@ -9,16 +9,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class DashController extends AbstractController
 {
     #[Route('/dash', name: 'app_dash')]
-    public function index(ManagerRegistry $manager): Response
+    public function index(Request $request,ManagerRegistry $manager): Response
     {
         $data=[];
-
         $data['companies']=$manager->getRepository(Company::class)->findAll();
-
+        
         return $this->render('dash/index.html.twig', $data);
     }
 

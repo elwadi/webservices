@@ -3,6 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\Company;
+use App\Entity\User;
 use App\Message\SendMail;
 use Doctrine\Persistence\ManagerRegistry;
 use Monolog\Logger;
@@ -15,15 +16,16 @@ final class SendMailHandler
 
     public function __invoke(SendMail $message): void
     {
-        $company= new Company();
+        $user = $this->managerRegistry->getRepository(User::class)->find($message->getUserId());
 
-        $company->setName($message->getName());
-        $company->setDescription($message->getContent());
+        if($user instanceof User){
+            $user->setCounter($user->getCounter()-1);
 
-        $entityManager = $this->managerRegistry->getManager();
-        $entityManager->persist($company);
-        $entityManager->flush();
-        
-        echo $company->getId()." => ".$message->getName();
+            $entityManager = $this->managerRegistry->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            
+            echo $user->getId()." => ".$user->getCounter();
+        }
     }
 }
