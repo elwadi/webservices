@@ -200,7 +200,9 @@
                                 style="background-image: url(./static/avatars/000m.jpg)"></span>
                             <div class="d-none d-xl-block ps-2">
                                 <div>
-                                    {{app.user.email}}
+                                    {% if app.user %}
+                                        {{app.user.email}}
+                                    {% endif %}
                                 </div>
                                 <div class="mt-1 small text-muted">UI Designer</div>
                             </div>

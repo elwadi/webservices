@@ -33,14 +33,13 @@ services:
             - ./database_data:/var/lib/postgresql/data:rw
         networks:
             - symfony
-    dbmysql:
-        image: mysql:9.1.0-oracle
+    mailer:
+        image: axllent/mailpit
         ports:
-            - 3306:3306
+        - "8025:8025"
+        - "1025:1025"
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: dockertuto
-        networks:
-            - symfony
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1
 networks:
     symfony:
