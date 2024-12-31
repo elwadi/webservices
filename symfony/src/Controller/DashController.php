@@ -17,6 +17,9 @@ class DashController extends AbstractController
     #[Route('/dash', name: 'app_dash')]
     public function index(Request $request,ManagerRegistry $manager): Response
     {
+
+        //ck_dbb70522a717d8e1062ad64e85f21b80f9d7553b
+        //cs_5b9ce48a5718568cea743c813cc6e297d9c1922d
         $data=[];
         $data['companies']=$manager->getRepository(Company::class)->findAll();
         
