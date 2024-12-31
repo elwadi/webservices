@@ -26,11 +26,11 @@ class WooController extends AbstractController
         );
 
         $data=$woocommerce->get('products');
+        dd($data);
         $updateData=[
             'name'=>'updated name',
         ];
         $woocommerce->put('products/59', $updateData);
-        dd($data);
 
 
         return $this->render('woo/index.html.twig', [

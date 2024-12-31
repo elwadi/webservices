@@ -60,9 +60,16 @@ class Account
     #[ORM\OneToMany(targetEntity: LogMessage::class, mappedBy: 'account')]
     private Collection $logMessages;
 
+    /**
+     * @var Collection<int, WpSite>
+     */
+    #[ORM\OneToMany(targetEntity: WpSite::class, mappedBy: 'account')]
+    private Collection $wpSites;
+
     public function __construct()
     {
         $this->logMessages = new ArrayCollection();
+        $this->wpSites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -130,6 +137,36 @@ class Account
             // set the owning side to null (unless already changed)
             if ($logMessage->getAccount() === $this) {
                 $logMessage->setAccount(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WpSite>
+     */
+    public function getWpSites(): Collection
+    {
+        return $this->wpSites;
+    }
+
+    public function addWpSite(WpSite $wpSite): static
+    {
+        if (!$this->wpSites->contains($wpSite)) {
+            $this->wpSites->add($wpSite);
+            $wpSite->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWpSite(WpSite $wpSite): static
+    {
+        if ($this->wpSites->removeElement($wpSite)) {
+            // set the owning side to null (unless already changed)
+            if ($wpSite->getAccount() === $this) {
+                $wpSite->setAccount(null);
             }
         }
 

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New WpSite{% endblock %}
+
+{% block body %}
+    <h1>Create new WpSite</h1>
+
+    {{ include('wp_site/_form.html.twig') }}
+
+    <a href="{{ path('app_wp_site_index') }}">back to list</a>
+{% endblock %}
