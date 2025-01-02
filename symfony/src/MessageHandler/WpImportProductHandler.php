@@ -20,7 +20,7 @@ final class WpImportProductHandler
     {
         $wp=$this->managerRegistry->getRepository(WpSite::class)->find($message->webId);
         if($wp instanceof WpSite){
-            $product=$this->managerRegistry->getRepository(Product::class)->find($message->productId);
+            $product=$this->managerRegistry->getRepository(Product::class)->findOneBy(['productId' => $message->productId]);
             if(!$product instanceof Product){
                 $product=new Product();
                 $product->setWebsite($wp);

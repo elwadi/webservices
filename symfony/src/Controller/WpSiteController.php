@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\WpSite;
 use App\Form\WpSiteType;
 use App\Repository\WpSiteRepository;
+use Automattic\WooCommerce\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,23 @@ final class WpSiteController extends AbstractController
             $entityManager->persist($wpSite);
             $entityManager->flush();
 
+            $woocommerce = new Client(
+                $wpSite->getWebsiteurl(),
+                $wpSite->getCsKey(),
+                $wpSite->getCsSecret(),
+                [
+                    'wp_api' => true,
+                    'version' => 'wc/v3'
+                ]
+            );
+    
+            $data = [
+                'name' => 'Product created',
+                'topic' => 'product.created',
+                'delivery_url' => 'https://webhook.site/227e0658-42d7-4b61-b297-caf4d3d8fe07'
+            ];
+            
+            $webhookId=- $woocommerce->post('webhooks', $data);
             return $this->redirectToRoute('app_wp_site_index', [], Response::HTTP_SEE_OTHER);
         }
 
