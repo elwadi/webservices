@@ -26,6 +26,8 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             App\Message\SendMail: async
             App\Message\WpImportProduct: async
+            App\Message\WpAiGenerator: async
+            App\Message\WpUpdateProduct: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

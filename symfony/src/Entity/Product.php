@@ -17,30 +17,24 @@ class Product
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?WpSite $website = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $productId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $productName = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $productDescription = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $AiName = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $AiDescription = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getWebsite(): ?WpSite
-    {
-        return $this->website;
-    }
-
-    public function setWebsite(?WpSite $website): static
-    {
-        $this->website = $website;
-
-        return $this;
     }
 
     public function getProductId(): ?string
@@ -78,4 +72,42 @@ class Product
 
         return $this;
     }
+
+    public function getAiName(): ?string
+    {
+        return $this->AiName;
+    }
+
+    public function setAiName(?string $AiName): static
+    {
+        $this->AiName = $AiName;
+
+        return $this;
+    }
+
+    public function getAiDescription(): ?string
+    {
+        return $this->AiDescription;
+    }
+
+    public function setAiDescription(?string $AiDescription): static
+    {
+        $this->AiDescription = $AiDescription;
+
+        return $this;
+    }
+
+    public function getWebsite(): ?WpSite
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?WpSite $website): static
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    
 }
