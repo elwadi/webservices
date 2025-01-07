@@ -13,9 +13,10 @@ class AiController extends AbstractController
     #[Route('/ai', name: 'app_ai')]
     public function index(): Response
     {
+        echo "Hello ai";
      
         $client = new Client();
-        $apiKey="gsk_xxxxxx";
+        $apiKey="#";
 
     try {
         $response = $client->post('https://api.groq.com/openai/v1/chat/completions', [
@@ -24,12 +25,11 @@ class AiController extends AbstractController
                 'Content-Type' => 'application/json',
             ],
             'json' => [
-                //'model' => 'mixtral-8x7b-32768',
-                'model' => 'llama3-groq-70b-8192-tool-use-preview',
+                'model' => 'mixtral-8x7b-32768',
                 'messages' => [
                     [
                         "role" => "system",
-                        "content" => "act as web marketing agent , you should help me to have perfect copywriting for my ecommerce product description , you should respect seo guidelines and user friendly description, your response should be in french. your response should respect this json schema {\"product_title\":\"\",\"product_description\":\"\"} . remove anything else from your response, your response should be  json only",
+                        "content" => "act as web marketing agent , you should help me to have perfect copywriting for my ecommerce product description , you should respect seo guidelines and user friendly description, your response should be in the same language of the product. your response should respect this format {\"product_title\":\" new product title \",\"product_description\":\" new product description\"} . remove anything else from your response, your response should be  json format"
                     ],
                     [
                         "role" => "user",
@@ -42,10 +42,16 @@ Elle dispose également de nombreuses fonctionnalités de suivi de la santé, te
         ]);
         
         $responseData = json_decode($response->getBody()->getContents(), true);
-        dd($responseData);
+
+        $pattern = '/\{(?:[^{}]|(?R))*\}/';
+
+        preg_match_all($pattern, $responseData["choices"][0]["message"]["content"], $matches);
+        $matches=str_replace('\\','', $matches[0][0]);
+        dd(json_decode($matches));
 
         return new Response();
     } catch (Exception $e) {
+        dd($e);
         return new Response();
     }
         

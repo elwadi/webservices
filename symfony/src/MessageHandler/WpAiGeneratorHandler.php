@@ -19,21 +19,21 @@ final class WpAiGeneratorHandler
     {
 
         $client = new Client();
-        $apiKey = "groq_key"; // TODO: update groq key
+        $apiKey = "gsk_xxxxx"; // TODO: update groq key
         $product=$this->managerRegistry->getRepository(Product::class)->find($message->productId);
         if($product instanceof Product){
             
-            $response = $client->post('ADD_GROQ_URL' , [
+            $response = $client->post('https://api.groq.com/openai/v1/chat/completions' , [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $apiKey,
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
-                    'model' => 'gpt-4o-mini', // TODO: Update model
+                    'model' => 'mixtral-8x7b-32768',
                     'messages' => [
                         [
                             "role" => "system",
-                            "content" => "act as web marketing agent , you should help me to have perfect copywriting for my ecommerce product description , you should respect seo guidelines and user friendly description, your response should be in french. your response should respect this json schema {\"product_title\":\"\",\"product_description\":\"\"} . remove anything else from your response, your response should be  json only",
+                            "content" => "act as web marketing agent , you should help me to have perfect copywriting for my ecommerce product description , you should respect seo guidelines and user friendly description, your response should be in the same language of the product. your response should respect this format {\"product_title\":\" new product title \",\"product_description\":\" new product description\"} . remove anything else from your response, your response should be  json format"
                         ],
                         [
                             "role" => "user",
@@ -44,10 +44,12 @@ final class WpAiGeneratorHandler
                 ],
             ]);
         }
+        $responseData = json_decode($response->getBody()->getContents(), true);
+
         $pattern = '/\{(?:[^{}]|(?R))*\}/';
 
-        $responseData = json_decode($response->getBody()->getContents(), true);
         preg_match_all($pattern, $responseData["choices"][0]["message"]["content"], $matches);
+        $matches=str_replace('\\','', $matches[0][0]);
 
         if (!empty($matches[0])) {
            $content=json_decode($matches[0][0], true);
